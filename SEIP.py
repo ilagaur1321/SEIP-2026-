@@ -36,7 +36,7 @@ with st.spinner("Loading data..."):
 df.replace('unknown', np.nan, inplace=True)
 df.drop_duplicates(inplace=True)
 df['review/score'] = pd.to_numeric(df['review/score'], errors='coerce')
-df['review/time'] = pd.to_datetime(df['review/time'], unit='s')
+df['review/time'] = pd.to_datetime(pd.to_numeric(df['review/time'], errors='coerce'), unit='s')
 df[['helpful_votes', 'total_votes']] = df['review/helpfulness'].str.split('/', expand=True).astype(float)
 df['review/text'] = df['review/text'].str.strip()
 df.dropna(subset=['review/text'], inplace=True)
