@@ -101,3 +101,28 @@ axes[1].axvline(df['review_char_count'].median(), color='blue', linestyle='--',
 axes[1].legend()
 plt.tight_layout()
 st.pyplot(fig2)
+
+from wordcloud import WordCloud, STOPWORDS
+
+st.subheader("Word Cloud of Watch Reviews")
+
+# Combine all reviews into one text
+text = ' '.join(df['review'].dropna())
+
+# Generate word cloud
+wordcloud = WordCloud(
+    width=800, 
+    height=400,
+    background_color='white',
+    colormap='Blues',
+    stopwords=STOPWORDS,
+    max_words=200,
+    collocations=False
+).generate(text)
+
+# Display
+fig_wc, ax_wc = plt.subplots(figsize=(12, 6))
+ax_wc.imshow(wordcloud, interpolation='bilinear')
+ax_wc.axis('off')
+ax_wc.set_title('Most Common Words in Watch Reviews', fontsize=16, fontweight='bold', pad=15)
+st.pyplot(fig_wc)
