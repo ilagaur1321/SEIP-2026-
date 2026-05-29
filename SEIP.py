@@ -8,6 +8,35 @@ drive.mount('/content/drive')
 import gzip
 import simplejson
 
+import gzip
+import urllib.request
+import io
+import pandas as pd
+import streamlit as st
+
+@st.cache_data
+def load_data():
+    url = "https://snap.stanford.edu/data/amazon/Watches.txt.gz"
+    response = urllib.request.urlopen(url)
+    f = gzip.open(io.BytesIO(response.read()), 'rt', encoding='latin-1')
+    entries = []
+    entry = {}
+    for line in f:
+        line = line.strip()
+        colon = line.find(':')
+        if colon == -1:
+            if entry:
+                entries.append(entry)
+                entry = {}
+            continue
+        entry[line[:colon]] = line[colon+2:]
+    if entry:
+        entries.append(entry)
+    return pd.DataFrame(entries)
+
+df = load_data()
+st.write(df.head())
+
 def parse(filename):
     with gzip.open(filename, 'rt', encoding='latin-1') as f:
         entry = {}
